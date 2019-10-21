@@ -1,0 +1,36 @@
+{
+    "name": "ef-core-snippets",
+    "displayName": "EF Core Snippets",
+    "description": "Entity Framework Core snippet generator",
+    "version": "1.0.0",
+    "engines": {
+        "vscode": "^1.39.0"
+    },
+    "categories": [
+        "Snippets"
+    ],
+    "contributes": {
+        "snippets": [
+            {
+                "language": ".NET Core",
+                "path": "./snippets/snippets.json"
+            },
+            {
+                "language": "dotnet",
+                "path": "./snippets/snippets.json"
+            },
+            {
+                "language": "html",
+                "path": "./snippets/snippets.json"
+            },
+            {
+                "language": "json",
+                "path": "./snippets/snippets.json"
+            },
+            {
+                "language": "C#",
+                "path": "./snippets/snippets.json"
+            }
+        ]
+    }
+}

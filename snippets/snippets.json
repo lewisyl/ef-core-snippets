@@ -1,0 +1,15 @@
+{
+    "Entity Framework appsetting.json Template":{
+        "prefix": "!dbinfo",
+        "body": [
+            "{",
+                "\"DBInfo\":",
+                "{",
+                    "\"Name\": \"MySQLconnect\",",
+                    "\"ConnectionString\": \"server=localhost;userid=root;password=root;port=3306;database=${1:YourDBName};SslMode=None\"",
+                "}",
+            "}"
+        ],
+        "description": "Creates appsettings.json template for your DB info."
+    }
+}
