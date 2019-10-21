@@ -3,6 +3,12 @@
     "displayName": "EF Core Snippets",
     "description": "Entity Framework Core snippet generator",
     "version": "1.0.0",
+    "icon": "icon.png",
+    "publisher": "LewisLiu",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/lewisyl/ef-core-snippets"
+    },
     "engines": {
         "vscode": "^1.39.0"
     },
@@ -12,14 +18,6 @@
     "contributes": {
         "snippets": [
             {
-                "language": ".NET Core",
-                "path": "./snippets/snippets.json"
-            },
-            {
-                "language": "dotnet",
-                "path": "./snippets/snippets.json"
-            },
-            {
                 "language": "html",
                 "path": "./snippets/snippets.json"
             },
@@ -28,7 +26,7 @@
                 "path": "./snippets/snippets.json"
             },
             {
-                "language": "C#",
+                "language": "csharp",
                 "path": "./snippets/snippets.json"
             }
         ]
