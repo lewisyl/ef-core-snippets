@@ -1,15 +1,276 @@
 {
-    "Entity Framework appsetting.json Template":{
+    "appsetting.json Template":
+    {
         "prefix": "!dbinfo",
-        "body": [
+        "body": 
+        [
             "{",
-                "\"DBInfo\":",
-                "{",
-                    "\"Name\": \"MySQLconnect\",",
-                    "\"ConnectionString\": \"server=localhost;userid=root;password=root;port=3306;database=${1:YourDBName};SslMode=None\"",
-                "}",
+            "   \"DBInfo\":",
+            "   {",
+            "       \"Name\": \"MySQLconnect\",",
+            "       \"ConnectionString\": \"server=localhost;userid=root;password=root;port=3306;database=${1:YourDBName};SslMode=None\"",
+            "   }",
             "}"
         ],
-        "description": "Creates appsettings.json template for your DB info."
+        "description": "Creates appsettings.json template for your DB info with no SSLMode activated."
+    },
+    "YourContext.cs Template":
+    {
+        "prefix": "!ctx",
+        "body": 
+        [
+            "using Microsoft.EntityFrameworkCore;",
+            "$0",
+            "namespace ${1:YourNamespace}.Models",
+            "{",
+            "   // Don't forget to match the class name <MyContext> to your context file's (this file) name.",
+            "   public class MyContext : DbContext",
+            "   {",
+            "       public MyContext(DbContextOptions options) : base(options) {}",
+            "$0",
+            "// public DbSet for all tables you have. For example:",
+            "// public DbSet<User> Users { get; set; }",
+            "   }",
+            "}"
+        ],
+        "description": "Creates YourContext.cs template for your context setup."
+    },
+    "Setup.cs Template":
+    {
+        "prefix": "!setup",
+        "body": 
+        [
+            "using System;",
+            "using System.Collections.Generic;",
+            "using System.Linq;",
+            "using System.Threading.Tasks;",
+            "using Microsoft.AspNetCore.Builder;",
+            "using Microsoft.AspNetCore.Hosting;",
+            "using Microsoft.AspNetCore.Http;",
+            "using Microsoft.AspNetCore.Mvc;",
+            "using Microsoft.Extensions.Configuration;",
+            "using Microsoft.Extensions.DependencyInjection;",
+            "using Microsoft.EntityFrameworkCore;",
+            "using ${1:YourNamespace}.Models;",
+            "$0",
+            "namespace ${1:YourNamespace}",
+            "{",
+            "   public class Startup",
+            "   {",
+            "       public Startup(IConfiguration configuration)",
+            "       {",
+            "           Configuration = configuration;",
+            "       }",
+            "$0",
+            "       public IConfiguration Configuration { get; }",
+            "$0",
+            "       public void ConfigureServices(IServiceCollection services)",
+            "       {",
+            "           // ***This line below is the string connecting to your Db. Make sure Context file name matches your own context file's.***",
+            "           services.AddDbContext<MyContext>(options=>options.UseMySql(Configuration[\"DBInfo:ConnectionString\"]));",
+            "           services.AddSession();",
+            "           services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);",
+            "       }",
+            "$0",
+            "       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.",
+            "       public void Configure(IApplicationBuilder app, IHostingEnvironment env)",
+            "       {",
+            "           if (env.IsDevelopment())",
+            "           {",
+            "               app.UseDeveloperExceptionPage();",
+            "           }",
+            "           else",
+            "           {",
+            "               app.UseExceptionHandler(\"/Home/Error\");",
+            "           }",
+            "$0",
+            "           app.UseSession();",
+            "           app.UseStaticFiles();",
+            "$0",
+            "           app.UseMvc(routes =>",
+            "           {",
+            "               routes.MapRoute(",
+            "                   name: \"default\",",
+            "                   template: \"{controller=Home}/{action=Index}/{id?}\");",
+            "           });",
+            "       }",
+            "   }",
+            "}"
+        ],
+        "description": "Creates Setup.cs template for your project setup with session enable."
+    },
+    "HomeController.cs dbContext short cut":
+    {
+        "prefix": "!hcdb",
+        "body": 
+        [
+            "private MyContext dbContext;",
+            "public HomeController(MyContext context)",
+            "{",
+                "dbContext = context;",
+            "}"
+        ],
+        "description": "Creates dbContext snippet for your HomeController.cs."
+    },
+    "Basic User.cs Template":
+    {
+        "prefix": "!usr",
+        "body": 
+        [
+            "using System.ComponentModel.DataAnnotations;",
+            "using System;",
+            "using System.Collections.Generic;",
+            "using System.ComponentModel.DataAnnotations.Schema;",
+
+            "namespace ${1:YourNamespace}.Models",
+            "{",
+            "   public class User",
+            "   {",
+            "       [Key]",
+            "       public int UserId { get; set; }",
+            "$0",
+            "       [Required]",
+            "       [RegularExpression(@\"^[a-zA-Z ]+$\", ErrorMessage = \"Use letters only please\")]",
+            "       [Display(Name=\"First Name\")]",
+            "       public string FirstName { get; set; }",
+            "$0",
+            "       [Required]",
+            "       [RegularExpression(@\"^[a-zA-Z ]+$\", ErrorMessage = \"Use letters only please\")]",
+            "       [Display(Name=\"Last Name\")]",
+            "       public string LastName { get; set; }",
+            "$0",
+            "       [Required]",
+            "       [EmailAddress(ErrorMessage = \"Invalid Email Address\")]",
+            "       public string Email { get; set; }",
+            "$0",
+            "       [Required]",
+            "       [DataType(DataType.Password)]",
+            "       [MinLength(8, ErrorMessage = \"Password must be 8 charactors or longer\")]",
+            "       public string Password { get; set; }",
+            "$0",
+            "       [Required]",
+            "       public DateTime CreatedAt { get; set; } = DateTime.Now;",
+            "       [Required]",
+            "       public DateTime UpdatedAt { get; set; } = DateTime.Now;",
+            "$0",
+            "       public List<Like> Likes { get; set; }",
+            "$0",
+            "       [NotMapped]",
+            "       [Compare(\"Password\")]",
+            "       [DataType(DataType.Password)]",
+            "       [Display(Name=\"Confirm Password\")]",
+            "       public string ConfirmPw { get; set; }",
+            "   }",
+            "}"
+        ],
+        "description": "Creates a basic User model template."
+    },
+    "Password Validation Model Template":
+    {
+        "prefix": "!pwvmdl",
+        "body": 
+        [
+            "using System;",
+            "using System.ComponentModel.DataAnnotations;",
+            "using System.ComponentModel.DataAnnotations.Schema;",
+            "$0",
+            "namespace ${1:YourNamespace}.Models",
+            "{",
+            "   public class LoginUser",
+            "   {",
+            "       public string Email { get; set; }",
+            "       public string Password { get; set; }",
+            "   }",
+            "}"
+        ],
+        "description": "Creates a login validation model template."
+    },
+    "Same Pg Login and Registration Model Template":
+    {
+        "prefix": "!lrmdl",
+        "body": 
+        [
+            "using System;",
+            "using System.ComponentModel.DataAnnotations;",
+            "using System.ComponentModel.DataAnnotations.Schema;",
+            "$0",
+            "namespace WeddingPlanner.Models",
+            "{",
+            "   public class LoginReg",
+            "   {",
+            "       public User NewUser { get; set; }",
+            "       public LoginUser ReturnUser { get; set; }",
+            "   }",
+            "}"
+        ],
+        "description": "Creates a model template for login and registration on the same page."
+    },
+    "Same Pg Login and Registration HTML Template":
+    {
+        "prefix": "!lgrghtml",
+        "body": 
+        [
+            "@{",
+            "   ViewData[\"Title\"] = \"Home\";",
+            "}",
+                        
+            "@model LoginReg",
+            "<div class=\"row banner text-center\">",
+            "   <div class=\"col-9\">",
+            "       <h1>Welcome to The Bright Ideas Board!</h1>",
+            "   </div>",
+            "</div>",
+
+            "<div class=\"row\">",
+            "   <div class=\"col-6\">",
+            "       <h3>Register</h3>",
+            "       <form action=\"/register\" method=\"POST\" class=\"SignupForm\">",
+            "           <div class=\"form-group\">",
+            "               <label asp-for=\"NewUser.Name\"></label>",
+            "               <input type=\"text\" class=\"form-control\" asp-for=\"NewUser.Name\" id=\"Name\" placeholder=\"Name\">",
+            "               <span asp-validation-for=\"NewUser.Name\" class=\"validationMsg\"></span>",
+            "           </div>",
+            "           <div class=\"form-group\">",
+            "               <label asp-for=\"NewUser.Alias\"></label>",
+            "               <input type=\"text\" class=\"form-control\" asp-for=\"NewUser.Alias\" id=\"Alias\" placeholder=\"Alias\">",
+            "               <span asp-validation-for=\"NewUser.Alias\" class=\"validationMsg\"></span>",
+            "           </div>",
+            "           <div class=\"form-group\">",
+            "               <label asp-for=\"NewUser.Email\"></label>",
+            "               <input type=\"text\" class=\"form-control\" asp-for=\"NewUser.Email\" id=\"Email\" aria-describedby=\"emailHelp\" placeholder=\"Email\">",
+            "               <span asp-validation-for=\"NewUser.Email\" class=\"validationMsg\"></span>",
+            "           </div>",
+            "           <div class=\"form-group\">",
+            "               <label asp-for=\"NewUser.Password\"></label>",
+            "               <input type=\"password\" asp-for=\"NewUser.Password\" class=\"form-control\" id=\"Password\" placeholder=\"Password\">",
+            "               <span asp-validation-for=\"NewUser.Password\" class=\"validationMsg\"></span>",
+            "           </div>",
+            "           <div class=\"form-group\">",
+            "               <label asp-for=\"NewUser.ConfirmPw\"></label>",
+            "               <input type=\"password\" asp-for=\"NewUser.ConfirmPw\" class=\"form-control\" id=\"ConfirmPw\" placeholder=\"Type Password Again\">",
+            "               <span asp-validation-for=\"NewUser.ConfirmPw\" class=\"validationMsg\"></span>",
+            "           </div>",
+            "           <button type=\"submit\" class=\"btn btn-primary\">Sign up Now</button>",
+            "       </form>",
+            "   </div>",
+            "   <div class=\"col-6\">",
+            "       <h3>Login</h3>",
+            "       <form action=\"/login\" method=\"POST\" class=\"LoginForm\">",
+            "           <div class=\"form-group\">",
+            "               <label asp-for=\"ReturnUser.Email\"></label>",
+            "               <input type=\"email\" class=\"form-control\" asp-for=\"ReturnUser.Email\" id=\"Email\" aria-describedby=\"emailHelp\" placeholder=\"Email\">",
+            "           </div>",
+            "           <div class=\"form-group\">",
+            "               <label asp-for=\"ReturnUser.Password\"></label>",
+            "               <input type=\"password\" asp-for=\"ReturnUser.Password\" class=\"form-control\" id=\"Password\" placeholder=\"Password\">",
+            "               <span asp-validation-for=\"ReturnUser.Password\" class=\"validationMsg\"></span>",
+            "               <span asp-validation-for=\"ReturnUser.Email\" class=\"validationMsg\"></span>",
+            "           </div>",
+            "           <button type=\"submit\" class=\"btn btn-primary\">Login Now</button>",
+            "       </form>",
+            "   </div>",
+            "</div>"
+        ],
+        "description": "Creates a html template for login and registration page with Bootstrap."
     }
 }
