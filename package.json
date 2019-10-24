@@ -4,7 +4,7 @@
     "description": "Entity Framework Core snippet generator for EF Core v 2.2.0",
     "version": "1.0.0",
     "icon": "icon.png",
-    "publisher": "Lewis Liu",
+    "publisher": "LewisYLiu",
     "repository": {
         "type": "git",
         "url": "https://github.com/lewisyl/ef-core-snippets"
